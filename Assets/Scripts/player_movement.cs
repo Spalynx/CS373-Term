@@ -9,7 +9,9 @@ public class player_movement: MonoBehaviour {
 	private bool moving_forward;
 	private bool grounded;
 
-    // Use this for initialization
+	/* Initialize the rigidbody on the player.
+	 *
+	 */
     void Start()
     {
         //Get and store a reference to the Rigidbody2D component so that we can access it.
@@ -17,18 +19,19 @@ public class player_movement: MonoBehaviour {
 		rb2d.freezeRotation = true;
     }
 
+	/** Each fra
+	 *
+	 *
+	 *
+	 *
+	 */
 	void Update(){
-		if ( !moving_forward ) {
-             transform.localRotation = Quaternion.Euler(0, 180, 0);
-		}	
-		else {
-             transform.localRotation = Quaternion.Euler(0, 0, 0);
-		}
-
-
-		if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) && grounded)  //makes player jump
-		{
-			if( !moving_forward	 && jumpHeight.x > 0){
+		if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) && grounded) { //makes player jump
+			Debug.Log(jumpHeight.x);
+			if( !moving_forward	 && jumpHeight.x > 0) {
+				jumpHeight.x *= -1;
+			}
+			if(moving_forward && jumpHeight.x < 0){
 				jumpHeight.x *= -1;
 			}
 
@@ -36,18 +39,20 @@ public class player_movement: MonoBehaviour {
 		}
 	}
     //FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
 
         //Store the current horizontal input in the float moveHorizontal.
         float moveHorizontal = Input.GetAxis ("Horizontal");
-		//Set movement to forward/backwards
-		if (moveHorizontal < 0) {
-				moving_forward = false;
-		}
-		else if (moveHorizontal > 0) { 		
-				moving_forward = true;
-		}
+
+				//Set movement to forward/backwards
+				if (moveHorizontal < 0) {
+						moving_forward = false;
+						transform.localRotation = Quaternion.Euler(0, 180, 0);
+				}
+				else if (moveHorizontal > 0) { 		
+						moving_forward = true;
+						transform.localRotation = Quaternion.Euler(0, 0, 0);
+				}
 
         //Store the current vertical input in the float moveVertical.
         float moveVertical = Input.GetAxis ("Vertical");
@@ -63,6 +68,7 @@ public class player_movement: MonoBehaviour {
 				 grounded = true;
 			 }
 			 else { grounded = false; }
+
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rb2d.AddForce (movement * speed);
 
